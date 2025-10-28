@@ -1,13 +1,13 @@
 # 🐔 Leakuku: Poultry Management Flutter App  
 > **_A Flutter-based solution empowering farmers to manage and grow their poultry businesses with ease._**  
-> 🚧 _Working name: “Leakuku” (formerly PoultryPro) — subject to change during brand development._
+> 🚧 _Working name: “Leakuku” — subject to change during brand development._
 
 ---
 
 ## 🌱 Vision  
 Leakuku aims to **revolutionize poultry farming** by offering a smart, user-friendly mobile app that helps farmers track flocks, record progress, manage feed schedules, and receive real-time insights — all in one place.
 
-Our goal is to **digitize small- and medium-scale poultry operations**, improving efficiency, accuracy, and profitability for farmers through accessible, data-driven technology.
+Our goal is to **digitize small, medium-scale and large poultry operations**, improving efficiency, accuracy, and profitability for farmers through accessible, data-driven technology.
 
 ---
 
@@ -35,16 +35,16 @@ Farmers can:
 | **Data** | Implementation layer (local/remote data). | Hive Data Sources, Repository Implementations |
 | **Presentation** | User Interface and State Management. | Pages, Widgets, Riverpod Providers |
 
----
+
 
 lib/
 ├── core/ # Shared constants, errors, utilities
 ├── data/ # Models, datasources, repositories
 ├── domain/ # Entities, usecases, repository contracts
-├── presentation/ # UI, widgets, providers (Riverpod)
+├── presentation/ # UI, widgets, providers 
 └── main.dart # App entry point
 
----
+
 
 ## 🧩 Core Technologies  
 
@@ -90,8 +90,7 @@ lib/
 - AI Insights  
 - Community & Multilingual Support  
 
-### 🚀 **Future Implementations**
-*(As suggested by Manu’s AI & iterative reviews)*  
+### 🚀 **Future Implementations**  
 - 🧠 Predictive Analytics for Feed Consumption  
 - 📡 IoT Sensor Integration for real-time tracking  
 - 🧾 Expense & Profit Tracker  
@@ -104,7 +103,7 @@ lib/
 
 ## 👥 Target Users  
 
-- 🐔 Small & Medium-Scale Poultry Farmers  
+- 🐔 Small, Medium-Scale & large Poultry Farmers  
 - 🧑🏾‍🌾 Agribusiness Entrepreneurs  
 - 📊 NGOs & Extension Officers supporting farmers  
 
