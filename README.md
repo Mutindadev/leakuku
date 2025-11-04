@@ -35,16 +35,35 @@ Farmers can:
 | **Data** | Implementation layer (local/remote data). | Hive Data Sources, Repository Implementations |
 | **Presentation** | User Interface and State Management. | Pages, Widgets, Riverpod Providers |
 
+---
+**project structure**
 
 
 lib/
-├── core/ # Shared constants, errors, utilities
-├── data/ # Models, datasources, repositories
-├── domain/ # Entities, usecases, repository contracts
-├── presentation/ # UI, widgets, providers 
-└── main.dart # App entry point
+├── core/
+│   ├── app/                    # Placeholder for App-level widgets/config (e.g., AppTheme)
+│   ├── constants/              # App-wide constants (e.g., AppColors, AppConstants)
+│   ├── data/                   # Placeholder for Core Data (e.g., API Client, Dio setup)
+│   ├── di.dart                 # Dependency Injection setup (Riverpod providers)
+│   ├── failures/               # Custom exception and failure classes (failures.dart)
+│   └── utils/                  # Helper functions (e.g., date_utils.dart)
+│
+├── features/
+│   ├── auth/
+│   │   ├── data/               # Data Sources and Repository Implementation
+│   │   ├── domain/             # Entities, Abstract Repository, Use Cases
+│   │   ├── models/             # Data Models (DTOs)
+│   │   ├── presentation/       # UI Pages (login_register_page.dart)
+│   │   └── provider/           # State Management (auth_provider.dart)
+│   │
+│   └── flock/
+│       ├── data/               # Data Sources and Repository Implementation
+│       ├── domain/             # Entities, Abstract Repository, Use Cases
+│       └── presentation/       # UI Pages (dashboard_page.dart)
+│
+└── main.dart                   # Application entry point
 
-
+---
 
 ## 🧩 Core Technologies  
 
@@ -127,14 +146,22 @@ Leakuku helps farmers make **data-driven decisions**, promoting sustainability, 
 # Clone the repository
 git clone https://github.com/<your-username>/leakuku.git
 
+```
+
 # Navigate into the project
+```bash
 cd leakuku
+```
 
 # Install dependencies
+```bash
 flutter pub get
+```
 
 # Run the app
+```bash
 flutter run
+```
 
 ---
 
