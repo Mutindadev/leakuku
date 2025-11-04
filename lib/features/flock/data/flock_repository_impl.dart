@@ -42,4 +42,29 @@ class FlockRepositoryImpl implements FlockRepository {
       return Left(CacheFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteFlock(String flockId) async {
+    try {
+      await localDataSource.deleteFlock(flockId);
+      return const Right(null);
+    } on DataNotFoundFailure {
+      return Left(DataNotFoundFailure());
+    } on CacheFailure {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Flock>> updateFlock(String flockId) async {
+    try {
+      final flockModel = await localDataSource.getFlock(flockId);
+      await localDataSource.updateFlock(flockModel);
+      return Right(flockModel);
+    } on DataNotFoundFailure {
+      return Left(DataNotFoundFailure());
+    } on CacheFailure {
+      return Left(CacheFailure());
+    }
+  }
 }

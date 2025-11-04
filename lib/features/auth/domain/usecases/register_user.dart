@@ -27,7 +27,7 @@ class RegisterUser {
       params.name,
       params.email,
       params.password,
-      params.role,
+      // params.role,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:hive/hive.dart';
 import 'package:leakuku/core/error/failures.dart';
 import 'package:leakuku/features/flock/domain/flock_model.dart';
@@ -6,6 +7,8 @@ abstract class FlockLocalDataSource {
   Future<FlockModel> getFlock(String id);
   Future<List<FlockModel>> getAllFlocks();
   Future<void> saveFlock(FlockModel flock);
+  Future<void> deleteFlock(String id);
+  Future<FlockModel> updateFlock(FlockModel flock);
 }
 
 class FlockLocalDataSourceImpl implements FlockLocalDataSource {
@@ -43,6 +46,33 @@ class FlockLocalDataSourceImpl implements FlockLocalDataSource {
   Future<void> saveFlock(FlockModel flock) async {
     try {
       await flockBox.put(flock.id, flock);
+    } catch (e) {
+      throw CacheFailure();
+    }
+  }
+
+  @override
+  Future<void> deleteFlock(String id) async {
+    try {
+      final exists = flockBox.containsKey(id);
+      if (!exists) {
+        throw DataNotFoundFailure();
+      }
+      await flockBox.delete(id);
+    } catch (e) {
+      throw CacheFailure();
+    }
+  }
+
+  @override
+  Future<FlockModel> updateFlock(FlockModel flock) async {
+    try {
+      final exists = flockBox.containsKey(flock.id);
+      if (!exists) {
+        throw DataNotFoundFailure();
+      }
+      await flockBox.put(flock.id, flock);
+      return flock;
     } catch (e) {
       throw CacheFailure();
     }

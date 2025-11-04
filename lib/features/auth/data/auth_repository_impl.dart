@@ -4,6 +4,7 @@ import 'package:leakuku/data/datasources/auth_local_data_source.dart';
 import 'package:leakuku/domain/entities/user.dart';
 import 'package:leakuku/domain/repositories/auth_repository.dart';
 import 'package:leakuku/features/auth/data/auth_local_data_source.dart';
+import 'package:leakuku/features/auth/domain/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
@@ -23,9 +24,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> register(User user, String password) async {
+  Future<Either<Failure, User>> register(
+      String name, String email, String password) async {
     try {
-      final userModel = UserModel.fromEntity(user);
+      final userModel = UserModel(name: name, email: email, id: '', role: '');
       final newUserModel = await localDataSource.register(userModel, password);
       return Right(newUserModel as User);
     } on AuthFailure catch (e) {
@@ -34,7 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(CacheFailure());
     }
   }
-  
+
   @override
   Future<Either<Failure, void>> logout() {
     // TODO: implement logout

@@ -3,12 +3,12 @@ import 'package:leakuku/core/error/failures.dart';
 import 'package:leakuku/domain/entities/flock.dart';
 import 'package:leakuku/domain/repositories/flock_repository.dart';
 
-class UpdateFlock {
+class GetAllFlocks {
   final FlockRepository repository;
 
-  UpdateFlock(this.repository);
+  GetAllFlocks(this.repository);
 
-  Future<Either<Failure, Flock>> call(String flockId) async {
-    return await repository.updateFlock(flockId);
+  Future<Either<Failure, List<Flock>>> call() async {
+    return await repository.getAllFlocks();
   }
 }

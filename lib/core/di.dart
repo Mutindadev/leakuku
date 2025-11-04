@@ -1,27 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:leakuku/features/auth/data/auth_local_data_source.dart';
 
-// === Core Features ===
-import 'package:leakuku/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:leakuku/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:leakuku/features/auth/domain/repositories/auth_repository.dart';
+// Data Sources
+import 'package:leakuku/features/auth/data/auth_local_data_source.dart';
+import 'package:leakuku/features/flock/data/flock_local_data_source.dart';
+
+// Repositories
+import 'package:leakuku/domain/repositories/auth_repository.dart';
+import 'package:leakuku/domain/repositories/flock_repository.dart';
+import 'package:leakuku/features/auth/data/auth_repository_impl.dart';
+import 'package:leakuku/features/flock/data/flock_repository_impl.dart';
+
+// Models
+import 'package:leakuku/features/auth/domain/models/user_model.dart';
+import 'package:leakuku/features/flock/domain/create_flock.dart';
+import 'package:leakuku/features/flock/domain/flock_model.dart';
+import 'package:leakuku/features/flock/domain/get_flock.dart';
+import 'package:leakuku/features/flock/domain/models/flock_model.dart';
+
+// Use Cases
 import 'package:leakuku/features/auth/domain/usecases/login_user.dart';
 import 'package:leakuku/features/auth/domain/usecases/register_user.dart';
-
-import 'package:leakuku/features/flock/data/datasources/flock_local_data_source.dart';
-import 'package:leakuku/features/flock/data/repositories/flock_repository_impl.dart';
-import 'package:leakuku/features/flock/domain/flock_model.dart';
-import 'package:leakuku/features/flock/domain/repositories/flock_repository.dart';
 import 'package:leakuku/features/flock/domain/usecases/create_flock.dart';
-import 'package:leakuku/features/flock/domain/usecases/get_flocks.dart';
-
-import 'package:leakuku/features/flock/domain/usecases/get_flock.dart';
+import 'package:leakuku/features/flock/domain/usecases/get_all_flocks.dart';
 import 'package:leakuku/features/flock/domain/usecases/update_flock.dart';
 import 'package:leakuku/features/flock/domain/usecases/delete_flock.dart';
-
-import 'package:leakuku/features/auth/domain/models/user_model.dart';
-import 'package:leakuku/features/flock/domain/models/flock_model.dart';
 
 // === Hive Boxes ===
 
@@ -35,36 +38,33 @@ final flockBoxProvider = FutureProvider<Box<FlockModel>>((ref) async {
   return await Hive.openBox<FlockModel>('flockBox');
 });
 
-
 // === Local Data Sources ===
 
 // Auth local data source provider
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
   final userBox = ref.watch(userBoxProvider).value;
   if (userBox == null) throw Exception('User Box not initialized');
-  return AuthLocalDataSourceImpl(userBox);
+  return AuthLocalDataSourceImpl(userBox: userBox);
 });
 
 // Flock local data source provider
 final flockLocalDataSourceProvider = Provider<FlockLocalDataSource>((ref) {
   final flockBox = ref.watch(flockBoxProvider).value;
   if (flockBox == null) throw Exception('Flock Box not initialized');
-  return FlockLocalDataSourceImpl(flockBox);
+  return FlockLocalDataSourceImpl(flockBox: flockBox);
 });
-
 
 // === Repositories ===
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final localDataSource = ref.watch(authLocalDataSourceProvider);
-  return AuthRepositoryImpl(localDataSource);
+  return AuthRepositoryImpl(localDataSource: localDataSource);
 });
 
 final flockRepositoryProvider = Provider<FlockRepository>((ref) {
   final localDataSource = ref.watch(flockLocalDataSourceProvider);
-  return FlockRepositoryImpl(localDataSource);
+  return FlockRepositoryImpl(localDataSource: localDataSource);
 });
-
 
 // === Use Cases ===
 
@@ -85,9 +85,9 @@ final createFlockProvider = Provider<CreateFlock>((ref) {
   return CreateFlock(repo);
 });
 
-final getFlocksProvider = Provider<GetFlocks>((ref) {
+final getFlocksProvider = Provider<GetAllFlocks>((ref) {
   final repo = ref.watch(flockRepositoryProvider);
-  return GetFlocks(repo);
+  return GetAllFlocks(repo);
 });
 
 final getFlockProvider = Provider<GetFlock>((ref) {
@@ -104,4 +104,3 @@ final deleteFlockProvider = Provider<DeleteFlock>((ref) {
   final repo = ref.watch(flockRepositoryProvider);
   return DeleteFlock(repo);
 });
-
