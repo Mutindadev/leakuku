@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:lea_kuku/core/failures/failures.dart';
-import 'package:lea_kuku/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:lea_kuku/features/auth/data/models/user_model.dart';
-import 'package:lea_kuku/features/auth/domain/entities/user.dart';
-import 'package:lea_kuku/features/auth/domain/auth_repository.dart';
+import 'package:leakuku/core/error/failures.dart';
+import 'package:leakuku/data/datasources/auth_local_data_source.dart';
+import 'package:leakuku/domain/entities/user.dart';
+import 'package:leakuku/domain/repositories/auth_repository.dart';
+import 'package:leakuku/features/auth/data/auth_local_data_source.dart';
+import 'package:leakuku/features/auth/domain/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
@@ -14,7 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> login(String email, String password) async {
     try {
       final userModel = await localDataSource.login(email, password);
-      return Right(userModel);
+      return Right(userModel as User);
     } on AuthFailure catch (e) {
       return Left(AuthFailure(e.message));
     } catch (e) {
@@ -23,15 +24,22 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> register(User user, String password) async {
+  Future<Either<Failure, User>> register(
+      String name, String email, String password) async {
     try {
-      final userModel = UserModel.fromEntity(user);
+      final userModel = UserModel(name: name, email: email, id: '', role: '');
       final newUserModel = await localDataSource.register(userModel, password);
-      return Right(newUserModel);
+      return Right(newUserModel as User);
     } on AuthFailure catch (e) {
       return Left(AuthFailure(e.message));
     } catch (e) {
       return Left(CacheFailure());
     }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
   }
 }

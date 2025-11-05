@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lea_kuku/features/auth/presentation/providers/auth_provider.dart';
+import 'package:leakuku/presentation/providers/auth_provider.dart';
 
 class LoginRegisterPage extends ConsumerWidget {
   LoginRegisterPage({super.key});
@@ -17,11 +17,10 @@ class LoginRegisterPage extends ConsumerWidget {
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${next.error.toString()}')),
+          SnackBar(content: Text('Error: ${next.error}')),
         );
       }
       if (next.user != null) {
-        // Navigate to Dashboard
         Navigator.of(context).pushReplacementNamed('/dashboard');
       }
     });
@@ -51,7 +50,7 @@ class LoginRegisterPage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        isLogin ? 'Welcome Back!' : 'Join Lea Kuku',
+                        isLogin ? 'Welcome Back!' : 'Join PoultryPro',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF212121),
@@ -82,7 +81,7 @@ class LoginRegisterPage extends ConsumerWidget {
                           valueListenable: _role,
                           builder: (context, role, child) {
                             return DropdownButtonFormField<String>(
-                              value: role,
+                              initialValue: role, // Changed from value to initialValue
                               decoration: _inputDecoration('Role', FontAwesomeIcons.userTag),
                               items: ['Farmer', 'Admin'].map((String value) {
                                 return DropdownMenuItem<String>(
