@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lea_kuku/core/failures/failures.dart';
-import 'package:lea_kuku/core/di.dart';
-import 'package:lea_kuku/features/auth/domain/entities/user.dart';
-import 'package:lea_kuku/features/auth/domain/usecases/auth/login_user.dart';
-import 'package:lea_kuku/features/auth/domain/usecases/auth/register_user.dart';
+import 'package:leakuku/core/error/failures.dart';
+import 'package:leakuku/core/di.dart';
+import 'package:leakuku/domain/entities/user.dart';
+import 'package:leakuku/features/auth/domain/usecases/login_user.dart';
+import 'package:leakuku/features/auth/domain/usecases/register_user.dart';
 
 class AuthState {
   final User? user;
