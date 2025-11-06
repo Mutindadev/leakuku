@@ -12,16 +12,14 @@ import 'package:leakuku/features/auth/data/auth_repository_impl.dart';
 import 'package:leakuku/features/flock/data/flock_repository_impl.dart';
 
 // Models
-import 'package:leakuku/features/auth/domain/models/user_model.dart';
+import 'package:leakuku/data/models/user_model.dart';
 import 'package:leakuku/features/flock/domain/create_flock.dart';
 import 'package:leakuku/features/flock/domain/flock_model.dart';
 import 'package:leakuku/features/flock/domain/get_flock.dart';
-import 'package:leakuku/features/flock/domain/models/flock_model.dart';
 
 // Use Cases
 import 'package:leakuku/features/auth/domain/usecases/login_user.dart';
 import 'package:leakuku/features/auth/domain/usecases/register_user.dart';
-import 'package:leakuku/features/flock/domain/usecases/create_flock.dart';
 import 'package:leakuku/features/flock/domain/usecases/get_all_flocks.dart';
 import 'package:leakuku/features/flock/domain/usecases/update_flock.dart';
 import 'package:leakuku/features/flock/domain/usecases/delete_flock.dart';
@@ -29,8 +27,8 @@ import 'package:leakuku/features/flock/domain/usecases/delete_flock.dart';
 // === Hive Boxes ===
 
 // Provide the User box
-final userBoxProvider = FutureProvider<Box<UserModel>>((ref) async {
-  return await Hive.openBox<UserModel>('userBox');
+final userBoxProvider = Provider<Box<UserModel>>((ref) {
+  return Hive.box<UserModel>('userBox'); // Changed to use .box() instead of .openBox()
 });
 
 // Provide the Flock box
@@ -42,8 +40,7 @@ final flockBoxProvider = FutureProvider<Box<FlockModel>>((ref) async {
 
 // Auth local data source provider
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
-  final userBox = ref.watch(userBoxProvider).value;
-  if (userBox == null) throw Exception('User Box not initialized');
+  final userBox = ref.watch(userBoxProvider); // No need for .value since it's not FutureProvider
   return AuthLocalDataSourceImpl(userBox: userBox);
 });
 

@@ -9,11 +9,11 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Mock Data for Dashboard
-    final int totalChickens = 500;
-    final int currentAgeDays = 25;
-    final double averageWeight = 1.25; // kg
-    final int mortalityCount = 15;
-    final String nextVaccination = 'Gumboro (Day 28)';
+    const int totalChickens = 500;
+    const int currentAgeDays = 25;
+    const double averageWeight = 1.25; // kg
+    const int mortalityCount = 15;
+    const String nextVaccination = 'Gumboro (Day 28)';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),

@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:leakuku/core/error/failures.dart';
 import 'package:leakuku/data/models/user_model.dart';
-import 'package:leakuku/domain/entities/user.dart';
-import 'package:leakuku/features/auth/domain/models/user_model.dart';
 
 abstract class AuthLocalDataSource {
   Future<UserModel> login(String email, String password);
@@ -33,13 +31,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<UserModel> register(UserModel user, String password) async {
-    // In a real app, we would hash the password before saving.
-    // We'll use the email as the key for simplicity.
-    if (userBox.containsKey(user.email)) {
+    // Check if user with this email already exists
+    final existingUser = userBox.values.where((u) => u.email == user.email).firstOrNull;
+    
+    if (existingUser != null) {
       throw AuthFailure('User with this email already exists.');
     }
 
-    // We'll use the email as the ID for simplicity in this mock
+    // Create new user with email as ID
     final newUser = UserModel(
       id: user.email,
       name: user.name,

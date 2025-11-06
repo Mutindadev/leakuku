@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:leakuku/core/di.dart';
 import 'package:leakuku/domain/entities/user.dart';
+import 'package:leakuku/features/auth/domain/usecases/login_user.dart';
+import 'package:leakuku/features/auth/domain/usecases/register_user.dart';
 
 class AuthState {
   final User? user;
@@ -19,36 +22,72 @@ class AuthState {
   }) {
     return AuthState(
       user: user ?? this.user,
-      error: error ?? this.error,
+      error: error,
       isLoading: isLoading ?? this.isLoading,
     );
   }
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(AuthState());
+  final Ref ref;
+  
+  AuthNotifier(this.ref) : super(AuthState());
 
   Future<void> login(String email, String password) async {
-    state = AuthState(isLoading: true);
+    if (email.isEmpty || password.isEmpty) {
+      state = AuthState(error: 'Please enter email and password');
+      return;
+    }
+
+    state = state.copyWith(isLoading: true, error: null);
+    
     try {
-      // TODO: Implement actual login logic
-      throw UnimplementedError();
+      final loginUseCase = ref.read(loginUserProvider);
+      final result = await loginUseCase(LoginParams(email: email, password: password));
+      
+      result.fold(
+        (failure) {
+          state = AuthState(error: failure.message, isLoading: false);
+        },
+        (user) {
+          state = AuthState(user: user, isLoading: false);
+        },
+      );
     } catch (e) {
-      state = AuthState(error: e.toString());
+      state = AuthState(error: e.toString(), isLoading: false);
     }
   }
 
   Future<void> register(String name, String email, String password, String role) async {
-    state = AuthState(isLoading: true);
-    try {
-      // TODO: Implement actual registration logic
-      throw UnimplementedError();
-    } catch (e) {
-      state = AuthState(error: e.toString());
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      state = AuthState(error: 'Please fill all fields');
+      return;
     }
+
+    state = state.copyWith(isLoading: true, error: null);
+    
+    try {
+      final registerUseCase = ref.read(registerUserProvider);
+      final result = await registerUseCase(RegisterParams(name: name, email: email, password: password, role: role));
+      
+      result.fold(
+        (failure) {
+          state = AuthState(error: failure.message, isLoading: false);
+        },
+        (user) {
+          state = AuthState(user: user, isLoading: false);
+        },
+      );
+    } catch (e) {
+      state = AuthState(error: e.toString(), isLoading: false);
+    }
+  }
+
+  void logout() {
+    state = AuthState();
   }
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier();
+  return AuthNotifier(ref);
 });

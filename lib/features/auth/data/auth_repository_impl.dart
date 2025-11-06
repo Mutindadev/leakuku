@@ -1,10 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:leakuku/core/error/failures.dart';
-import 'package:leakuku/data/datasources/auth_local_data_source.dart';
 import 'package:leakuku/domain/entities/user.dart';
 import 'package:leakuku/domain/repositories/auth_repository.dart';
 import 'package:leakuku/features/auth/data/auth_local_data_source.dart';
-import 'package:leakuku/features/auth/domain/models/user_model.dart';
+import 'package:leakuku/data/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
@@ -38,8 +37,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<Either<Failure, void>> logout() async {
+    // Clear user session/cache if needed
+    return const Right(null);
   }
 }
