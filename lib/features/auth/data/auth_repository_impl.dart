@@ -14,7 +14,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> login(String username, String password) async {
     try {
       final userModel = await localDataSource.login(username, password);
-      return Right(userModel as User);
+      // Convert UserModel to User entity
+      final user = User(
+        id: userModel.id,
+        name: userModel.name,
+        email: userModel.email,
+        role: userModel.role,
+      );
+      return Right(user);
     } on AuthFailure catch (e) {
       return Left(AuthFailure(e.message));
     } catch (e) {
