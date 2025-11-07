@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:leakuku/core/error/failures.dart';
+import 'package:leakuku/data/models/user_model.dart';
 import 'package:leakuku/domain/entities/user.dart';
 import 'package:leakuku/domain/repositories/auth_repository.dart';
 
@@ -9,8 +10,9 @@ class RegisterUser {
 
   RegisterUser(this.repository);
 
-  Future<Either<Failure, User>> call(RegisterParams params) async {
-    return await repository.register(params.name, params.email, params.password);
+  Future<Either<Failure, UserModel>> call(RegisterParams params) async {
+    return await repository.register(
+        params.name, params.email, params.password);
   }
 }
 

@@ -31,22 +31,30 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<UserModel> register(UserModel user, String password) async {
-    // Check if user with this email already exists
-    final existingUser = userBox.values.where((u) => u.email == user.email).firstOrNull;
-    
-    if (existingUser != null) {
-      throw AuthFailure('User with this email already exists.');
+    try {
+      if (user.email == null || user.email.isEmpty) {
+        throw AuthFailure('Email cannot be empty');
+      }
+
+      // Check if user already exists
+      final existingUser = userBox.values.any((u) => u.email == user.email);
+      if (existingUser) {
+        throw AuthFailure('A user with this email already exists');
+      }
+
+      // Generate unique ID if not present
+      final userId =
+          user.id ?? DateTime.now().millisecondsSinceEpoch.toString();
+      final newUser = user.copyWith(id: userId);
+
+      // Save new user
+      await userBox.put(userId, newUser);
+      return newUser;
+    } catch (e) {
+      if (e is AuthFailure) {
+        rethrow;
+      }
+      throw AuthFailure('Failed to register user: ${e.toString()}');
     }
-
-    // Create new user with email as ID
-    final newUser = UserModel(
-      id: user.email,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    );
-
-    await userBox.put(newUser.email, newUser);
-    return newUser;
   }
 }
