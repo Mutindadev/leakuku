@@ -7,15 +7,20 @@ import 'package:leakuku/data/models/user_model_adapter.dart';
 import 'package:leakuku/features/auth/presentation/login_register_page.dart';
 import 'package:leakuku/features/flock/domain/flock_model.dart';
 import 'package:leakuku/features/flock/presentation/dashboard_page.dart';
+import 'package:leakuku/features/flock/presentation/flock_page.dart';
+import 'package:leakuku/features/profile/presentation/profile_page.dart';
+import 'package:leakuku/features/notifications/presentation/notifications_page.dart';
+import 'package:leakuku/features/progress/presentation/progress_page.dart';
+import 'package:leakuku/features/reports/presentation/reports_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(FlockModelAdapter());
   
   await Hive.openBox<UserModel>('userBox');
-
-  Hive.registerAdapter(FlockModelAdapter());
 
   runApp(const ProviderScope(child: LeaKukuApp()));
 }
@@ -46,6 +51,11 @@ class LeaKukuApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginRegisterPage(),
         '/dashboard': (context) => const DashboardPage(),
+        '/flock': (context) => const FlockPage(),
+        '/profile': (context) => const ProfilePage(),
+        '/notifications': (context) => const NotificationsPage(),
+        '/progress': (context) => const ProgressPage(),
+        '/reports': (context) => const ReportsPage(),
       },
     );
   }

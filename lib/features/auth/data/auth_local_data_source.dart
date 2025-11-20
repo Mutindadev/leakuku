@@ -14,13 +14,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<UserModel> login(String email, String password) async {
-    // In a real app, we would hash the password and check against a stored hash.
-    // For this local mock, we'll just check if the user exists.
     try {
-      final user = userBox.values.firstWhere((u) => u.email == email);
-      // Mock password check: in a real app, this is where the hash check happens.
-      // Since we don't store passwords in the UserModel for simplicity,
-      // we'll simulate a successful login if the user is found.
+      final target = email.trim().toLowerCase();
+      final user = userBox.values.firstWhere((u) => u.email.trim().toLowerCase() == target);
       return user;
     } on StateError {
       throw AuthFailure('Invalid email or password.');
@@ -31,18 +27,20 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<UserModel> register(UserModel user, String password) async {
-    // Check if user with this email already exists
-    final existingUser = userBox.values.where((u) => u.email == user.email).firstOrNull;
-    
+    final incomingEmail = user.email.trim().toLowerCase();
+    final existingUser = userBox.values
+        .where((u) => u.email.trim().toLowerCase() == incomingEmail)
+        .cast<UserModel?>()
+        .firstWhere((_) => true, orElse: () => null);
+
     if (existingUser != null) {
       throw AuthFailure('User with this email already exists.');
     }
 
-    // Create new user with email as ID
     final newUser = UserModel(
-      id: user.email,
+      id: incomingEmail, // normalize id
       name: user.name,
-      email: user.email,
+      email: incomingEmail,
       role: user.role,
     );
 

@@ -10,11 +10,21 @@ class AuthRepositoryImpl implements AuthRepository {
 
   AuthRepositoryImpl({required this.localDataSource});
 
+  // Map UserModel to domain User entity
+  User _toEntity(UserModel model) {
+    return User(
+      id: model.id,
+      name: model.name,
+      email: model.email,
+      role: model.role,
+    );
+  }
+
   @override
   Future<Either<Failure, User>> login(String email, String password) async {
     try {
       final userModel = await localDataSource.login(email, password);
-      return Right(userModel as User);
+      return Right(_toEntity(userModel));
     } on AuthFailure catch (e) {
       return Left(AuthFailure(e.message));
     } catch (e) {
@@ -26,9 +36,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> register(
       String name, String email, String password) async {
     try {
-      final userModel = UserModel(name: name, email: email, id: '', role: '');
+      final userModel = UserModel(
+        id: email.trim().toLowerCase(),
+        name: name,
+        email: email.trim().toLowerCase(),
+        role: 'Farmer', // Default role
+      );
       final newUserModel = await localDataSource.register(userModel, password);
-      return Right(newUserModel as User);
+      return Right(_toEntity(newUserModel));
     } on AuthFailure catch (e) {
       return Left(AuthFailure(e.message));
     } catch (e) {
@@ -38,7 +53,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, void>> logout() async {
-    // Clear user session/cache if needed
     return const Right(null);
   }
 }
